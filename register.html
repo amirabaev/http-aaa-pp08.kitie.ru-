@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - EduPlatform</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 1199px)">
+    <link rel="icon" href="logo/logo.png">
+    <style>
+        /* Специфические стили для страницы регистрации */
+        .register-section {
+            min-height: calc(100vh - 140px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        
+        .register-container {
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .register-header h1 {
+            color: #2E3A59;
+            margin-bottom: 10px;
+        }
+        
+        .register-header p {
+            color: #666;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #E0E6EF;
+            z-index: 1;
+        }
+        
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #E0E6EF;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-circle {
+            background-color: #4A6FA5;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .step.active .step-label {
+            color: #4A6FA5;
+            font-weight: 500;
+        }
+        
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .password-strength {
+            margin-top: 10px;
+        }
+        
+        .strength-bar {
+            height: 5px;
+            background-color: #E0E6EF;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .strength-text {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .password-requirements {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #F7F9FC;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .requirement.valid {
+            color: #1A6A3F;
+        }
+        
+        .requirement.valid::before {
+            content: '✓';
+            color: #1A6A3F;
+            font-weight: bold;
+        }
+        
+        .requirement.invalid::before {
+            content: '✗';
+            color: #D32F2F;
+            font-weight: bold;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .terms-link {
+            color: #4A6FA5;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4A6FA5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .success-icon {
+            font-size: 48px;
+            color: #1A6A3F;
+            margin-bottom: 20px;
+        }
+        
+        /* Адаптивные стили */
+        @media (max-width: 768px) {
+            .progress-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .progress-steps::before {
+                display: none;
+            }
+            
+            .step {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                text-align: left;
+            }
+            
+            .step-circle {
+                margin: 0;
+                flex-shrink: 0;
+            }
+            
+            .form-navigation {
+                flex-direction: column;
+            }
+            
+            .form-navigation .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка сайта -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="logo/logo.png" alt="EduPlatform" class="logo-img">
+                    <span class="logo-text">EduPlatform</span>
+                </a>
+                
+                <!-- Вертикальное меню для мобильных -->
+                <nav class="nav mobile-nav">
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="nav-list" id="navList">
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="login.html">Войти</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Горизонтальное меню для десктопов -->
+                <nav class="nav desktop-nav">
+                    <ul class="nav-list">
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="login.html">Войти</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент - форма регистрации -->
+    <main class="main">
+        <section class="register-section">
+            <div class="container">
+                <div class="register-container">
+                    <div class="register-header">
+                        <h1>Создайте аккаунт</h1>
+                        <p>Присоединяйтесь к образовательной платформе EduPlatform</p>
+                    </div>
+                    
+                    <!-- Индикатор прогресса -->
+                    <div class="progress-steps">
+                        <div class="step active" id="step1">
+                            <div class="step-circle">1</div>
+                            <div class="step-label">Основные данные</div>
+                        </div>
+                        <div class="step" id="step2">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Безопасность</div>
+                        </div>
+                        <div class="step" id="step3">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Подтверждение</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Лоадер -->
+                    <div class="loader" id="registerLoader">
+                        <div class="loader-spinner"></div>
+                        <p>Регистрация...</p>
+                    </div>
+                    
+                    <!-- Форма регистрации - Шаг 1 -->
+                    <div class="card form-step active" id="step1Form">
+                        <h3>Основная информация</h3>
+                        <form id="registerForm" onsubmit="return false;">
+                            <div class="form-group">
+                                <label for="fullName" class="form-label">ФИО *</label>
+                                <input 
+                                    type="text" 
+                                    id="fullName" 
+                                    class="form-control" 
+                                    placeholder="Иванов Иван Иванович" 
+                                    required
+                                    autocomplete="name"
+                                >
+                                <div class="error-message" id="fullNameError">
+                                    Только кириллические буквы, дефис и пробелы
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="login" class="form-label">Логин *</label>
+                                <input 
+                                    type="text" 
+                                    id="login" 
+                                    class="form-control" 
+                                    placeholder="ivanov" 
+                                    required
+                                    autocomplete="username"
+                                >
+                                <div class="error-message" id="loginError">
+                                    Только латинские буквы, цифры и подчеркивание (3-20 символов)
+                                </div>
+                                <small class="hint-text">Будет использоваться для входа в систему</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email *</label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    class="form-control" 
+                                    placeholder="ivanov@example.com" 
+                                    required
+                                    autocomplete="email"
+                                >
+                                <div class="error-message" id="emailError">
+                                    Введите корректный email адрес
+                                </div>
+                            </div>
+                            
+                            <div class="form-navigation">
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'">
+                                    Назад
+                                </button>
+                                <button type="button" class="btn" onclick="nextStep()">
+                                    Продолжить
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Форма регистрации - Шаг 2 -->
+                    <div class="card form-step" id="step2Form">
+                        <h3>Настройка безопасности</h3>
+                        
+                        <div class="form-group">
+                            <label for="password" class="form-label">Пароль *</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                class="form-control" 
+                                placeholder="Создайте надежный пароль" 
+                                required
+                                autocomplete="new-password"
+                            >
+                            <div class="error-message" id="passwordError">
+                                Пароль должен содержать минимум 6 символов
+                            </div>
+                            
+                            <!-- Индикатор сложности пароля -->
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <div class="strength-text" id="strengthText">Сложность пароля</div>
+                            </div>
+                            
+                            <!-- Требования к паролю -->
+                            <div class="password-requirements">
+                                <div class="requirement" id="reqLength">
+                                    Минимум 6 символов
+                                </div>
+                                <div class="requirement" id="reqUppercase">
+                                    Хотя бы одна заглавная буква
+                                </div>
+                                <div class="requirement" id="reqNumber">
+                                    Хотя бы одна цифра
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">Подтверждение пароля *</label>
+                            <input 
+                                type="password" 
+                                id="confirmPassword" 
+                                class="form-control" 
+                                placeholder="Повторите пароль" 
+                                required
+                                autocomplete="new-password"
+                            >
+                            <div class="error-message" id="confirmPasswordError">
+                                Пароли не совпадают
+                            </div>
+                        </div>
+                        
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                                Назад
+                            </button>
+                            <button type="button" class="btn" onclick="nextStep()">
+                                Продолжить
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Форма регистрации - Шаг 3 -->
+                    <div class="card form-step" id="step3Form">
+                        <h3>Подтверждение регистрации</h3>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span>
+                                    Я согласен с 
+                                    <span class="terms-link" onclick="showTerms()">Пользовательским соглашением</span>
+                                    и 
+                                    <span class="terms-link" onclick="showPrivacy()">Политикой конфиденциальности</span> *
+                                </span>
+                            </label>
+                            <div class="error-message" id="agreeTermsError">
+                                Необходимо согласие с условиями
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="newsletter">
+                                <span>
+                                    Хочу получать новости и обновления платформы на email
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <div class="summary">
+                            <h4>Проверьте ваши данные:</h4>
+                            <div class="summary-item">
+                                <strong>ФИО:</strong> <span id="summaryFullName"></span>
+                            </div>
+                            <div class="summary-item">
+                                <strong>Логин:</strong> <span id="summaryLogin"></span>
+                            </div>
+                            <div class="summary-item">
+                                <strong>Email:</strong> <span id="summaryEmail"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                                Назад
+                            </button>
+                            <button type="button" class="btn" onclick="submitRegistration()">
+                                Зарегистрироваться
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Сообщение об успешной регистрации -->
+                    <div class="card success-message" id="successMessage">
+                        <div class="success-icon">✓</div>
+                        <h3>Регистрация успешна!</h3>
+                        <p>Ваш аккаунт был успешно создан.</p>
+                        <p>Через <span id="countdown">5</span> секунд вы будете перенаправлены на страницу входа.</p>
+                        <button class="btn" onclick="goToLogin()">
+                            Перейти к входу
+                        </button>
+                    </div>
+                    
+                    <div class="form-footer" style="text-align: center; margin-top: 20px;">
+                        <p>Уже есть аккаунт? <a href="login.html">Войти в систему</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал сайта -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="logo/logo.png" alt="EduPlatform" class="logo-img">
+                    <span class="logo-text">EduPlatform</span>
+                </div>
+                <div class="footer-info">
+                    <p>© 2024 Образовательная платформа. Все права защищены.</p>
+                    <p>Контактный email: support@eduplatform.ru</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальные окна -->
+    <div class="modal" id="termsModal" style="display: none;">
+        <div class="modal-content">
+            <h3>Пользовательское соглашение</h3>
+            <div style="max-height: 300px; overflow-y: auto; margin: 20px 0;">
+                <p>Текст пользовательского соглашения...</p>
+            </div>
+            <button class="btn" onclick="closeModal('termsModal')">Закрыть</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Глобальные переменные
+        let currentStep = 1;
+        let registrationData = {};
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            initRegistrationPage();
+            
+            // Добавляем базовые стили для модальных окон
+            addModalStyles();
+            
+            // Создаем учетную запись администратора, если её нет
+            createAdminIfNotExists();
+        });
+        
+        function initRegistrationPage() {
+            // Валидация в реальном времени
+            document.getElementById('fullName')?.addEventListener('input', validateFullName);
+            document.getElementById('login')?.addEventListener('input', validateLogin);
+            document.getElementById('email')?.addEventListener('input', validateEmail);
+            document.getElementById('password')?.addEventListener('input', validatePassword);
+            document.getElementById('confirmPassword')?.addEventListener('input', validateConfirmPassword);
+            
+            // Отслеживание сложности пароля
+            document.getElementById('password')?.addEventListener('input', updatePasswordStrength);
+            
+            // Кнопка отправки формы
+            document.getElementById('registerForm')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                nextStep();
+            });
+        }
+        
+        function addModalStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1001;
+                    padding: 20px;
+                }
+                
+                .modal-content {
+                    background: white;
+                    padding: 30px;
+                    border-radius: 10px;
+                    max-width: 500px;
+                    width: 100%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+                }
+                
+                .summary {
+                    background-color: #F7F9FC;
+                    padding: 15px;
+                    border-radius: 6px;
+                    margin: 20px 0;
+                }
+                
+                .summary-item {
+                    margin-bottom: 10px;
+                    padding-bottom: 10px;
+                    border-bottom: 1px solid #E0E6EF;
+                }
+                
+                .summary-item:last-child {
+                    border-bottom: none;
+                    margin-bottom: 0;
+                    padding-bottom: 0;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        function createAdminIfNotExists() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const adminExists = users.some(user => user.login === 'admin');
+            
+            if (!adminExists) {
+                const adminUser = {
+                    id: 1,
+                    fullName: 'Администратор',
+                    login: 'admin',
+                    email: 'admin@eduplatform.ru',
+                    password: 'admin',
+                    role: 'admin',
+                    createdAt: new Date().toISOString()
+                };
+                
+                users.push(adminUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                console.log('Учетная запись администратора создана');
+            }
+        }
+        
+        // Валидация полей
+        function validateFullName() {
+            const fullName = this.value.trim();
+            const errorElement = document.getElementById('fullNameError');
+            const regex = /^[А-ЯЁа-яё\s\-]+$/;
+            
+            if (!fullName) {
+                this.classList.add('error');
+                errorElement.textContent = 'Поле обязательно для заполнения';
+                errorElement.style.display = 'block';
+                return false;
+            } else if (!regex.test(fullName)) {
+                this.classList.add('error');
+                errorElement.textContent = 'Только кириллические буквы, дефис и пробелы';
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                this.classList.remove('error');
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validateLogin() {
+            const login = this.value.trim();
+            const errorElement = document.getElementById('loginError');
+            const regex = /^[a-zA-Z0-9_]{3,20}$/;
+            
+            if (!login) {
+                this.classList.add('error');
+                errorElement.textContent = 'Поле обязательно для заполнения';
+                errorElement.style.display = 'block';
+                return false;
+            } else if (!regex.test(login)) {
+                this.classList.add('error');
+                errorElement.textContent = 'Только латинские буквы, цифры и подчеркивание (3-20 символов)';
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                // Проверка уникальности логина
+                checkLoginUnique(login).then(isUnique => {
+                    if (!isUnique) {
+                        this.classList.add('error');
+                        errorElement.textContent = 'Этот логин уже занят';
+                        errorElement.style.display = 'block';
+                        return false;
+                    } else {
+                        this.classList.remove('error');
+                        errorElement.style.display = 'none';
+                        return true;
+                    }
+                });
+                
+                return true;
+            }
+        }
+        
+        async function checkLoginUnique(login) {
+            // Имитация запроса к серверу с задержкой
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const existingUser = users.find(user => user.login === login);
+                    resolve(!existingUser);
+                }, 300);
+            });
+        }
+        
+        function validateEmail() {
+            const email = this.value.trim();
+            const errorElement = document.getElementById('emailError');
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!email) {
+                this.classList.add('error');
+                errorElement.textContent = 'Поле обязательно для заполнения';
+                errorElement.style.display = 'block';
+                return false;
+            } else if (!regex.test(email)) {
+                this.classList.add('error');
+                errorElement.textContent = 'Введите корректный email адрес';
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                this.classList.remove('error');
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function validatePassword() {
+            const password = this.value;
+            const errorElement = document.getElementById('passwordError');
+            
+            if (!password) {
+                this.classList.add('error');
+                errorElement.textContent = 'Поле обязательно для заполнения';
+                errorElement.style.display = 'block';
+                return false;
+            } else if (password.length < 6) {
+                this.classList.add('error');
+                errorElement.textContent = 'Пароль должен содержать минимум 6 символов';
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                this.classList.remove('error');
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function updatePasswordStrength() {
+            const password = this.value;
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            
+            // Проверка длины
+            if (password.length >= 6) strength += 25;
+            if (password.length >= 8) strength += 25;
+            
+            // Проверка наличия заглавных букв
+            if (/[A-ZА-ЯЁ]/.test(password)) strength += 25;
+            
+            // Проверка наличия цифр
+            if (/\d/.test(password)) strength += 25;
+            
+            // Обновление индикатора
+            strengthFill.style.width = strength + '%';
+            
+            // Обновление текста и цвета
+            if (strength <= 25) {
+                strengthFill.style.backgroundColor = '#D32F2F';
+                strengthText.textContent = 'Слабый пароль';
+            } else if (strength <= 50) {
+                strengthFill.style.backgroundColor = '#FF9800';
+                strengthText.textContent = 'Средний пароль';
+            } else if (strength <= 75) {
+                strengthFill.style.backgroundColor = '#4A6FA5';
+                strengthText.textContent = 'Хороший пароль';
+            } else {
+                strengthFill.style.backgroundColor = '#1A6A3F';
+                strengthText.textContent = 'Отличный пароль!';
+            }
+            
+            // Обновление требований
+            updatePasswordRequirements(password);
+        }
+        
+        function updatePasswordRequirements(password) {
+            const reqLength = document.getElementById('reqLength');
+            const reqUppercase = document.getElementById('reqUppercase');
+            const reqNumber = document.getElementById('reqNumber');
+            
+            // Проверка длины
+            if (password.length >= 6) {
+                reqLength.classList.add('valid');
+                reqLength.classList.remove('invalid');
+            } else {
+                reqLength.classList.add('invalid');
+                reqLength.classList.remove('valid');
+            }
+            
+            // Проверка заглавных букв
+            if (/[A-ZА-ЯЁ]/.test(password)) {
+                reqUppercase.classList.add('valid');
+                reqUppercase.classList.remove('invalid');
+            } else {
+                reqUppercase.classList.add('invalid');
+                reqUppercase.classList.remove('valid');
+            }
+            
+            // Проверка цифр
+            if (/\d/.test(password)) {
+                reqNumber.classList.add('valid');
+                reqNumber.classList.remove('invalid');
+            } else {
+                reqNumber.classList.add('invalid');
+                reqNumber.classList.remove('valid');
+            }
+        }
+        
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            const errorElement = document.getElementById('confirmPasswordError');
+            
+            if (!confirmPassword) {
+                this.classList.add('error');
+                errorElement.textContent = 'Поле обязательно для заполнения';
+                errorElement.style.display = 'block';
+                return false;
+            } else if (password !== confirmPassword) {
+                this.classList.add('error');
+                errorElement.textContent = 'Пароли не совпадают';
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                this.classList.remove('error');
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        // Навигация по шагам
+        function nextStep() {
+            let isValid = true;
+            
+            // Валидация текущего шага
+            switch(currentStep) {
+                case 1:
+                    isValid = validateStep1();
+                    if (isValid) saveStep1Data();
+                    break;
+                case 2:
+                    isValid = validateStep2();
+                    if (isValid) saveStep2Data();
+                    break;
+                case 3:
+                    isValid = validateStep3();
+                    break;
+            }
+            
+            if (!isValid) return;
+            
+            // Переход к следующему шагу
+            if (currentStep < 3) {
+                document.querySelector(`#step${currentStep}Form`).classList.remove('active');
+                document.querySelector(`#step${currentStep}`).classList.remove('active');
+                
+                currentStep++;
+                
+                document.querySelector(`#step${currentStep}Form`).classList.add('active');
+                document.querySelector(`#step${currentStep}`).classList.add('active');
+                
+                // Обновляем сводку на шаге 3
+                if (currentStep === 3) {
+                    updateSummary();
+                }
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep > 1) {
+                document.querySelector(`#step${currentStep}Form`).classList.remove('active');
+                document.querySelector(`#step${currentStep}`).classList.remove('active');
+                
+                currentStep--;
+                
+                document.querySelector(`#step${currentStep}Form`).classList.add('active');
+                document.querySelector(`#step${currentStep}`).classList.add('active');
+            }
+        }
+        
+        function validateStep1() {
+            const fullNameValid = validateFullName.call(document.getElementById('fullName'));
+            const loginValid = validateLogin.call(document.getElementById('login'));
+            const emailValid = validateEmail.call(document.getElementById('email'));
+            
+            return fullNameValid && loginValid && emailValid;
+        }
+        
+        function validateStep2() {
+            const passwordValid = validatePassword.call(document.getElementById('password'));
+            const confirmPasswordValid = validateConfirmPassword.call(document.getElementById('confirmPassword'));
+            
+            return passwordValid && confirmPasswordValid;
+        }
+        
+        function validateStep3() {
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            const errorElement = document.getElementById('agreeTermsError');
+            
+            if (!agreeTerms) {
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function saveStep1Data() {
+            registrationData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                login: document.getElementById('login').value.trim(),
+                email: document.getElementById('email').value.trim()
+            };
+        }
+        
+        function saveStep2Data() {
+            registrationData.password = document.getElementById('password').value;
+            registrationData.confirmPassword = document.getElementById('confirmPassword').value;
+        }
+        
+        function updateSummary() {
+            document.getElementById('summaryFullName').textContent = registrationData.fullName;
+            document.getElementById('summaryLogin').textContent = registrationData.login;
+            document.getElementById('summaryEmail').textContent = registrationData.email;
+        }
+        
+        // Отправка регистрации
+        async function submitRegistration() {
+            if (!validateStep3()) return;
+            
+            // Показываем лоадер
+            document.getElementById('registerLoader').style.display = 'block';
+            document.getElementById('step3Form').style.display = 'none';
+            
+            // Имитация задержки сервера
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Сохраняем пользователя
+            const user = {
+                id: Date.now(),
+                fullName: registrationData.fullName,
+                login: registrationData.login,
+                email: registrationData.email,
+                password: registrationData.password,
+                role: 'user',
+                createdAt: new Date().toISOString(),
+                newsletter: document.getElementById('newsletter').checked
+            };
+            
+            // Получаем текущих пользователей
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Скрываем лоадер, показываем успешное сообщение
+            document.getElementById('registerLoader').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Запускаем обратный отсчет
+            startCountdown();
+        }
+        
+        function startCountdown() {
+            let countdown = 5;
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.textContent = countdown;
+            
+            const interval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    goToLogin();
+                }
+            }, 1000);
+        }
+        
+        function goToLogin() {
+            window.location.href = 'login.html?registered=success';
+        }
+        
+        // Модальные окна
+        function showTerms() {
+            document.getElementById('termsModal').style.display = 'flex';
+        }
+        
+        function showPrivacy() {
+            // Аналогично showTerms, но для политики конфиденциальности
+            alert('Политика конфиденциальности будет отображена здесь');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        // Автоматическое исправление ссылки "Контакты" на всех страницах
+(function fixContactLinks() {
+    const contactLinks = document.querySelectorAll('a[href="#contact"]');
+    const currentPage = window.location.pathname;
+    
+    // Если мы НЕ на главной странице
+    if (!currentPage.endsWith('index.html') && !currentPage.endsWith('/')) {
+        contactLinks.forEach(link => {
+            // Определяем правильный путь к index.html
+            let pathToIndex = 'index.html#contact';
+            
+            // Если мы в папке admin/
+            if (currentPage.includes('/admin/')) {
+                pathToIndex = '../index.html#contact';
+            }
+            
+            link.href = pathToIndex;
+        });
+    }
+})();
+    </script>
+</body>
+</html>

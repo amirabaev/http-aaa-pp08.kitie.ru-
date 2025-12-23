@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - EduPlatform</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 1199px)">
+    <link rel="stylesheet" href="css/desktop.css" media="(min-width: 1200px)">
+    <link rel="icon" href="logo/logo.png">
+    <style>
+        /* Стили для личного кабинета */
+        .cabinet-section {
+            padding: 40px 0;
+            min-height: calc(100vh - 140px);
+        }
+        
+        .cabinet-header {
+            margin-bottom: 30px;
+        }
+        
+        .cabinet-header h1 {
+            color: #2E3A59;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-message {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .cabinet-layout {
+            display: grid;
+            gap: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .cabinet-layout {
+                grid-template-columns: 250px 1fr;
+            }
+        }
+        
+        /* Боковая панель */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .user-info-card {
+            background: linear-gradient(135deg, #4A6FA5 0%, #2E3A59 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2rem;
+        }
+        
+        .user-name {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .quick-actions .btn {
+            width: 100%;
+        }
+        
+        /* Основной контент */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        /* Форма создания заявки */
+        .request-form-container {
+            display: none;
+        }
+        
+        .request-form-container.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Список заявок */
+        .requests-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .requests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .request-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #4A6FA5;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .request-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .request-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2E3A59;
+            margin: 0;
+        }
+        
+        .request-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #666;
+            flex-wrap: wrap;
+        }
+        
+        .request-category {
+            background-color: #E8F4FF;
+            color: #4A6FA5;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .request-status {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-new {
+            background-color: #FFF3E0;
+            color: #FF9800;
+        }
+        
+        .status-solved {
+            background-color: #E8F5E9;
+            color: #1A6A3F;
+        }
+        
+        .status-rejected {
+            background-color: #FFEBEE;
+            color: #D32F2F;
+        }
+        
+        .request-description {
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .request-actions .btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-danger {
+            background-color: #D32F2F;
+        }
+        
+        .btn-danger:hover {
+            background-color: #B71C1C;
+        }
+        
+        .btn-success {
+            background-color: #1A6A3F;
+        }
+        
+        .btn-success:hover {
+            background-color: #0D5C2E;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* Модальные окна */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Таблица заявок (для администратора) */
+        .requests-table {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #E0E6EF;
+        }
+        
+        th {
+            background-color: #F7F9FC;
+            font-weight: 600;
+            color: #2E3A59;
+        }
+        
+        tr:hover {
+            background-color: #F7F9FC;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 767px) {
+            .cabinet-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .requests-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-controls {
+                width: 100%;
+            }
+            
+            .request-header {
+                flex-direction: column;
+            }
+            
+            .request-actions {
+                flex-wrap: wrap;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+        }
+        
+        /* Индикатор загрузки */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4A6FA5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка сайта -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="logo/logo.png" alt="EduPlatform" class="logo-img">
+                    <span class="logo-text">EduPlatform</span>
+                </a>
+                
+                <!-- Вертикальное меню для мобильных -->
+                <nav class="nav mobile-nav">
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="nav-list" id="navList">
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="#requests">Мои заявки</a></li>
+                        <li><a href="#new-request">Новая заявка</a></li>
+                        <li><a href="#" onclick="logout()">Выход</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Горизонтальное меню для десктопов -->
+                <nav class="nav desktop-nav">
+                    <ul class="nav-list">
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="#requests">Мои заявки</a></li>
+                        <li><a href="#new-request" onclick="showCreateRequest()">Новая заявка</a></li>
+                        <li><a href="#" onclick="logout()">Выход</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <section class="cabinet-section">
+            <div class="container">
+                <div class="cabinet-header">
+                    <h1>Личный кабинет</h1>
+                    <div class="welcome-message" id="welcomeMessage">
+                        Добро пожаловать в личный кабинет!
+                    </div>
+                </div>
+                
+                <div class="cabinet-layout">
+                    <!-- Боковая панель -->
+                    <aside class="sidebar">
+                        <div class="user-info-card">
+                            <div class="user-avatar">
+                                👤
+                            </div>
+                            <div class="user-name" id="currentUserName">Иван Иванов</div>
+                            <div class="user-email" id="currentUserEmail">ivan@example.com</div>
+                            <button class="btn btn-secondary" onclick="logout()">Выйти из аккаунта</button>
+                        </div>
+                        
+                        <div class="card quick-actions">
+                            <h3>Быстрые действия</h3>
+                            <button class="btn" onclick="showCreateRequest()">
+                                ✏️ Создать заявку
+                            </button>
+                            <button class="btn btn-secondary" onclick="filterRequests('all')">
+                                📋 Все заявки
+                            </button>
+                            <button class="btn btn-secondary" onclick="filterRequests('new')">
+                                ⏳ Только новые
+                            </button>
+                            <button class="btn btn-secondary" onclick="filterRequests('solved')">
+                                ✅ Решенные
+                            </button>
+                            <button class="btn btn-secondary" onclick="filterRequests('rejected')">
+                                ❌ Отклоненные
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Статистика</h3>
+                            <div class="stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Всего заявок:</span>
+                                    <span class="stat-value" id="totalRequestsCount">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Новые:</span>
+                                    <span class="stat-value" id="newRequestsCount">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Решены:</span>
+                                    <span class="stat-value" id="solvedRequestsCount">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Отклонены:</span>
+                                    <span class="stat-value" id="rejectedRequestsCount">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                    
+                    <!-- Основной контент -->
+                    <div class="main-content">
+                        <!-- Форма создания заявки -->
+                        <div class="card request-form-container" id="requestFormContainer">
+                            <div class="form-header">
+                                <h3>Создание новой заявки</h3>
+                                <button class="btn btn-secondary btn-small" onclick="hideCreateRequest()">
+                                    ✕ Отмена
+                                </button>
+                            </div>
+                            
+                            <form id="requestForm">
+                                <div class="form-group">
+                                    <label for="requestTitle" class="form-label">Название заявки *</label>
+                                    <input 
+                                        type="text" 
+                                        id="requestTitle" 
+                                        class="form-control" 
+                                        placeholder="Например: Проблема с доступом к курсу"
+                                        required
+                                    >
+                                    <div class="error-message" id="titleError">
+                                        Пожалуйста, введите название заявки
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="requestDescription" class="form-label">Описание проблемы *</label>
+                                    <textarea 
+                                        id="requestDescription" 
+                                        class="form-control" 
+                                        rows="5"
+                                        placeholder="Опишите проблему подробно..."
+                                        required
+                                    ></textarea>
+                                    <div class="error-message" id="descriptionError">
+                                        Пожалуйста, опишите проблему
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="requestCategory" class="form-label">Категория *</label>
+                                    <select id="requestCategory" class="form-control" required>
+                                        <option value="">Выберите категорию</option>
+                                        <!-- Категории загрузятся динамически -->
+                                    </select>
+                                    <div class="error-message" id="categoryError">
+                                        Пожалуйста, выберите категорию
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn">
+                                        📨 Отправить заявку
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="hideCreateRequest()">
+                                        Отмена
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Список заявок -->
+                        <div class="card">
+                            <div class="requests-header">
+                                <h3 id="requestsTitle">Мои заявки</h3>
+                                <div class="filter-controls">
+                                    <select id="statusFilter" class="form-control" onchange="filterRequests(this.value)">
+                                        <option value="all">Все заявки</option>
+                                        <option value="new">Новые</option>
+                                        <option value="solved">Решены</option>
+                                        <option value="rejected">Отклонены</option>
+                                    </select>
+                                    <button class="btn" onclick="showCreateRequest()">
+                                        ➕ Новая заявка
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Индикатор загрузки -->
+                            <div class="loading" id="loadingIndicator">
+                                <div class="loader"></div>
+                                <p>Загрузка заявок...</p>
+                            </div>
+                            
+                            <!-- Список заявок -->
+                            <div class="requests-list" id="requestsList">
+                                <!-- Заявки будут загружены через JavaScript -->
+                            </div>
+                            
+                            <!-- Состояние "нет заявок" -->
+                            <div class="empty-state" id="emptyState" style="display: none;">
+                                <div class="empty-state-icon">📭</div>
+                                <h3>Заявок нет</h3>
+                                <p>У вас пока нет заявок. Создайте первую!</p>
+                                <button class="btn" onclick="showCreateRequest()">
+                                    Создать заявку
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал сайта -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="logo/logo.png" alt="EduPlatform" class="logo-img">
+                    <span class="logo-text">EduPlatform</span>
+                </div>
+                <div class="footer-info">
+                    <p>© 2024 Образовательная платформа. Все права защищены.</p>
+                    <p>Контактный email: support@eduplatform.ru</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h3>Подтверждение удаления</h3>
+            <p id="deleteModalText">Вы уверены, что хотите удалить эту заявку? Это действие нельзя отменить.</p>
+            <div class="modal-actions">
+                <button class="btn btn-danger" onclick="confirmDelete()">Да, удалить</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно изменения статуса (для администратора) -->
+    <div class="modal" id="statusModal">
+        <div class="modal-content">
+            <h3>Изменение статуса заявки</h3>
+            <div id="statusFormContent">
+                <!-- Контент будет загружен динамически -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Глобальные переменные
+        let currentUser = null;
+        let currentRequests = [];
+        let categories = [];
+        let requestToDelete = null;
+        
+        // Ключи для localStorage
+        const REQUESTS_KEY = 'eduplatform_requests';
+        const CATEGORIES_KEY = 'eduplatform_categories';
+        const CURRENT_USER_KEY = 'currentUser';
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            initCabinet();
+        });
+        
+        function initCabinet() {
+            // Проверяем авторизацию
+            checkAuth();
+            
+            // Загружаем данные
+            loadUserData();
+            loadCategories();
+            loadRequests();
+            
+            // Инициализируем форму
+            initRequestForm();
+            
+            // Инициализируем мобильное меню
+            initMobileMenu();
+        }
+        
+        // Проверка авторизации
+        function checkAuth() {
+            const userData = localStorage.getItem(CURRENT_USER_KEY);
+            
+            if (!userData) {
+                // Если пользователь не авторизован, перенаправляем на страницу входа
+                window.location.href = 'login.html?redirect=cabinet';
+                return;
+            }
+            
+            currentUser = JSON.parse(userData);
+            
+            // Если пользователь - администратор, перенаправляем в админ-панель
+            if (currentUser.role === 'admin') {
+                window.location.href = 'admin/index.html';
+            }
+        }
+        
+        // Загрузка данных пользователя
+        function loadUserData() {
+            if (!currentUser) return;
+            
+            // Обновляем приветствие
+            document.getElementById('welcomeMessage').textContent = 
+                `Добро пожаловать, ${currentUser.fullName || currentUser.login}!`;
+            
+            // Обновляем информацию в боковой панели
+            document.getElementById('currentUserName').textContent = 
+                currentUser.fullName || currentUser.login;
+            
+            if (currentUser.email) {
+                document.getElementById('currentUserEmail').textContent = currentUser.email;
+            }
+        }
+        
+        // Загрузка категорий
+        function loadCategories() {
+            const savedCategories = localStorage.getItem(CATEGORIES_KEY);
+            
+            if (savedCategories) {
+                categories = JSON.parse(savedCategories);
+            } else {
+                // Создаем начальные категории, если их нет
+                categories = [
+                    { id: 1, name: 'Технические проблемы' },
+                    { id: 2, name: 'Вопросы по курсам' },
+                    { id: 3, name: 'Ошибки в материалах' },
+                    { id: 4, name: 'Предложения по улучшению' },
+                    { id: 5, name: 'Другое' }
+                ];
+                localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+            }
+            
+            // Обновляем выпадающий список категорий
+            updateCategorySelect();
+        }
+        
+        // Обновление выпадающего списка категорий
+        function updateCategorySelect() {
+            const select = document.getElementById('requestCategory');
+            if (!select) return;
+            
+            // Очищаем опции, кроме первой
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+            
+            // Добавляем категории
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                select.appendChild(option);
+            });
+        }
+        
+        // Загрузка заявок
+        function loadRequests() {
+            const savedRequests = localStorage.getItem(REQUESTS_KEY);
+            
+            if (savedRequests) {
+                currentRequests = JSON.parse(savedRequests);
+            } else {
+                currentRequests = [];
+            }
+            
+            // Фильтруем заявки текущего пользователя
+            const userRequests = currentRequests.filter(request => 
+                request.userId === currentUser.id
+            );
+            
+            // Обновляем статистику
+            updateStats(userRequests);
+            
+            // Отображаем заявки
+            displayRequests(userRequests);
+        }
+        
+        // Обновление статистики
+        function updateStats(requests) {
+            const total = requests.length;
+            const newCount = requests.filter(r => r.status === 'new').length;
+            const solvedCount = requests.filter(r => r.status === 'solved').length;
+            const rejectedCount = requests.filter(r => r.status === 'rejected').length;
+            
+            document.getElementById('totalRequestsCount').textContent = total;
+            document.getElementById('newRequestsCount').textContent = newCount;
+            document.getElementById('solvedRequestsCount').textContent = solvedCount;
+            document.getElementById('rejectedRequestsCount').textContent = rejectedCount;
+        }
+        
+        // Отображение заявок
+        function displayRequests(requests) {
+            const requestsList = document.getElementById('requestsList');
+            const emptyState = document.getElementById('emptyState');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            // Скрываем индикатор загрузки
+            loadingIndicator.classList.remove('show');
+            
+            // Очищаем список
+            requestsList.innerHTML = '';
+            
+            if (requests.length === 0) {
+                // Показываем состояние "нет заявок"
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            // Скрываем состояние "нет заявок"
+            emptyState.style.display = 'none';
+            
+            // Сортируем заявки по дате (сначала новые)
+            requests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            // Отображаем каждую заявку
+            requests.forEach((request, index) => {
+                const requestElement = createRequestElement(request);
+                requestsList.appendChild(requestElement);
+                
+                // Добавляем анимацию появления
+                setTimeout(() => {
+                    requestElement.style.animation = 'slideIn 0.3s ease';
+                }, index * 100);
+            });
+        }
+        
+        // Создание элемента заявки
+        function createRequestElement(request) {
+            const div = document.createElement('div');
+            div.className = 'request-item';
+            div.dataset.id = request.id;
+            div.dataset.status = request.status;
+            
+            // Получаем название категории
+            const category = categories.find(c => c.id == request.categoryId);
+            const categoryName = category ? category.name : 'Неизвестно';
+            
+            // Форматируем дату
+            const date = new Date(request.createdAt);
+            const formattedDate = date.toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Определяем цвет статуса
+            let statusClass = '';
+            let statusText = '';
+            
+            switch (request.status) {
+                case 'new':
+                    statusClass = 'status-new';
+                    statusText = 'Новая';
+                    break;
+                case 'solved':
+                    statusClass = 'status-solved';
+                    statusText = 'Решена';
+                    break;
+                case 'rejected':
+                    statusClass = 'status-rejected';
+                    statusText = 'Отклонена';
+                    break;
+            }
+            
+            div.innerHTML = `
+                <div class="request-header">
+                    <h4 class="request-title">${request.title}</h4>
+                    <span class="request-status ${statusClass}">${statusText}</span>
+                </div>
+                
+                <div class="request-meta">
+                    <span class="request-date">📅 ${formattedDate}</span>
+                    <span class="request-category">${categoryName}</span>
+                </div>
+                
+                <div class="request-description">
+                    ${request.description}
+                </div>
+                
+                <div class="request-actions">
+                    ${request.status === 'new' ? `
+                        <button class="btn btn-danger" onclick="openDeleteModal(${request.id})">
+                            🗑️ Удалить
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+            
+            return div;
+        }
+        
+        // Инициализация формы создания заявки
+        function initRequestForm() {
+            const form = document.getElementById('requestForm');
+            
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    submitRequest();
+                });
+            }
+        }
+        
+        // Показать форму создания заявки
+        function showCreateRequest() {
+            document.getElementById('requestFormContainer').classList.add('show');
+            document.getElementById('requestTitle').focus();
+            
+            // Прокручиваем к форме
+            document.getElementById('requestFormContainer').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+        
+        // Скрыть форму создания заявки
+        function hideCreateRequest() {
+            document.getElementById('requestFormContainer').classList.remove('show');
+            document.getElementById('requestForm').reset();
+            
+            // Скрываем ошибки
+            ['titleError', 'descriptionError', 'categoryError'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+        }
+        
+        // Отправка заявки
+        function submitRequest() {
+            // Получаем данные формы
+            const title = document.getElementById('requestTitle').value.trim();
+            const description = document.getElementById('requestDescription').value.trim();
+            const categoryId = document.getElementById('requestCategory').value;
+            
+            // Валидация
+            let isValid = true;
+            
+            if (!title) {
+                document.getElementById('titleError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('titleError').style.display = 'none';
+            }
+            
+            if (!description) {
+                document.getElementById('descriptionError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('descriptionError').style.display = 'none';
+            }
+            
+            if (!categoryId) {
+                document.getElementById('categoryError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('categoryError').style.display = 'none';
+            }
+            
+            if (!isValid) return;
+            
+            // Создаем новую заявку
+            const newRequest = {
+                id: Date.now(),
+                userId: currentUser.id,
+                title: title,
+                description: description,
+                categoryId: parseInt(categoryId),
+                status: 'new',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            // Добавляем заявку в массив
+            currentRequests.push(newRequest);
+            
+            // Сохраняем в localStorage
+            localStorage.setItem(REQUESTS_KEY, JSON.stringify(currentRequests));
+            
+            // Показываем уведомление
+            showNotification('Заявка успешно создана!', 'success');
+            
+            // Скрываем форму
+            hideCreateRequest();
+            
+            // Перезагружаем заявки
+            loadRequests();
+        }
+        
+        // Фильтрация заявок
+        function filterRequests(status) {
+            const userRequests = currentRequests.filter(request => 
+                request.userId === currentUser.id
+            );
+            
+            let filteredRequests = userRequests;
+            
+            if (status !== 'all') {
+                filteredRequests = userRequests.filter(request => request.status === status);
+            }
+            
+            // Обновляем заголовок
+            let title = 'Мои заявки';
+            if (status === 'new') title = 'Новые заявки';
+            else if (status === 'solved') title = 'Решенные заявки';
+            else if (status === 'rejected') title = 'Отклоненные заявки';
+            
+            document.getElementById('requestsTitle').textContent = title;
+            document.getElementById('statusFilter').value = status;
+            
+            // Отображаем отфильтрованные заявки
+            displayRequests(filteredRequests);
+        }
+        
+        // Открытие модального окна удаления
+        function openDeleteModal(requestId) {
+            requestToDelete = requestId;
+            document.getElementById('deleteModal').classList.add('show');
+        }
+        
+        // Закрытие модального окна
+        function closeModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+            document.getElementById('statusModal').classList.remove('show');
+            requestToDelete = null;
+        }
+        
+        // Подтверждение удаления
+        function confirmDelete() {
+            if (!requestToDelete) {
+                closeModal();
+                return;
+            }
+            
+            // Находим индекс заявки
+            const requestIndex = currentRequests.findIndex(r => r.id === requestToDelete);
+            
+            if (requestIndex !== -1) {
+                // Проверяем, что заявка принадлежит текущему пользователю
+                if (currentRequests[requestIndex].userId !== currentUser.id) {
+                    showNotification('Вы можете удалять только свои заявки', 'error');
+                    closeModal();
+                    return;
+                }
+                
+                // Проверяем статус заявки
+                if (currentRequests[requestIndex].status !== 'new') {
+                    showNotification('Можно удалять только заявки со статусом "Новая"', 'error');
+                    closeModal();
+                    return;
+                }
+                
+                // Удаляем заявку
+                currentRequests.splice(requestIndex, 1);
+                
+                // Сохраняем изменения
+                localStorage.setItem(REQUESTS_KEY, JSON.stringify(currentRequests));
+                
+                // Показываем уведомление
+                showNotification('Заявка успешно удалена', 'success');
+                
+                // Перезагружаем заявки
+                loadRequests();
+            }
+            
+            closeModal();
+        }
+        
+        // Выход из аккаунта
+        function logout() {
+            // Удаляем данные текущего пользователя
+            localStorage.removeItem(CURRENT_USER_KEY);
+            
+            // Перенаправляем на главную страницу
+            window.location.href = 'index.html';
+        }
+        
+        // Показать уведомление
+        function showNotification(message, type = 'success') {
+            // Создаем элемент уведомления
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 5px;
+                color: white;
+                font-weight: 500;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            if (type === 'success') {
+                notification.style.backgroundColor = '#1A6A3F';
+            } else {
+                notification.style.backgroundColor = '#D32F2F';
+            }
+            
+            // Добавляем на страницу
+            document.body.appendChild(notification);
+            
+            // Удаляем через 3 секунды
+            setTimeout(() => {
+                notification.style.animation = 'fadeIn 0.3s ease reverse';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Инициализация мобильного меню
+        function initMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navList = document.getElementById('navList');
+            
+            if (menuToggle && navList) {
+                menuToggle.addEventListener('click', function() {
+                    navList.style.display = navList.style.display === 'flex' ? 'none' : 'flex';
+                    menuToggle.classList.toggle('active');
+                });
+                
+                // Закрытие меню при клике на ссылку
+                navList.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navList.style.display = 'none';
+                        menuToggle.classList.remove('active');
+                    });
+                });
+            }
+        }
+        // Автоматическое исправление ссылки "Контакты" на всех страницах
+(function fixContactLinks() {
+    const contactLinks = document.querySelectorAll('a[href="#contact"]');
+    const currentPage = window.location.pathname;
+    
+    // Если мы НЕ на главной странице
+    if (!currentPage.endsWith('index.html') && !currentPage.endsWith('/')) {
+        contactLinks.forEach(link => {
+            // Определяем правильный путь к index.html
+            let pathToIndex = 'index.html#contact';
+            
+            // Если мы в папке admin/
+            if (currentPage.includes('/admin/')) {
+                pathToIndex = '../index.html#contact';
+            }
+            
+            link.href = pathToIndex;
+        });
+    }
+})();
+    </script>
+</body>
+</html>

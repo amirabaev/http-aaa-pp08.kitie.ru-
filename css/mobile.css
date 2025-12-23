@@ -1,0 +1,45 @@
+/* Стили для мобильных устройств */
+@media (max-width: 1199px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .header-content {
+        padding: 10px 0;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
+    
+    .btn {
+        padding: 14px 20px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .desktop-nav {
+        display: none;
+    }
+    
+    .mobile-nav {
+        display: block;
+    }
+    
+    /* Вертикальное меню активируется по нажатию */
+    .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+}
